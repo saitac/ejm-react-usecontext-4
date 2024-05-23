@@ -1,9 +1,12 @@
+
+import {v4 as uuid4} from "uuid"
 import { initialTasks } from "../DB/db"
+import { ClsTask } from "../Class/Class"
 
 type tasksReducerAction =
-    {type: "added"} |
+    {type: "added", argumento: ClsTask} |
     {type: "changed", argumento: ClsTask} |
-    {type: "deleted"}
+    {type: "deleted", argumento: ClsTask}
 
 const tasksReducerInit = (): ClsTask[] | null => {
     return initialTasks
@@ -16,8 +19,14 @@ const tasksReducer = (
 
     switch(action.type) {
         case "added": {
-            console.log("added");
-            return tasks;
+            let tasksUpdated: ClsTask[] | null = [];
+            action.argumento.id = uuid4();
+            if (tasks !== null) {
+                tasksUpdated = [...tasks, action.argumento]
+            }else{
+                tasksUpdated.push(action.argumento);
+            }
+            return tasksUpdated;
         }
         case "changed":{
             let tasksUpdated: ClsTask[] | null;
@@ -35,8 +44,13 @@ const tasksReducer = (
             return tasksUpdated;
         }
         case "deleted":{
-            console.log("deleted");
-            return tasks;
+            let tasksUpdated: ClsTask[] | null;
+            if (tasks !== null){
+                tasksUpdated = tasks.filter( (t: ClsTask) => t.id !== action.argumento.id )
+            } else {
+                tasksUpdated = tasks;
+            }
+            return tasksUpdated;
         }
     }
 }

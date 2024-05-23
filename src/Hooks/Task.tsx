@@ -1,5 +1,6 @@
-import { ReactNode, useState } from "react"
+import { ReactNode, useState, ChangeEvent } from "react"
 import { useTasksDispatch } from "../Contexts/TasksContext";
+import { ClsTask } from "../Class/Class";
 
 type TaskProps = {
     task: ClsTask
@@ -8,7 +9,7 @@ type TaskProps = {
 const Task = ({task}: TaskProps) => {
 
     const [isEditing, setIsEditing] = useState(false);
-    const tasksDispatch = useTasksDispatch()
+    const tasksDispatch = useTasksDispatch();
     let taskContent: ReactNode;
 
     if (isEditing) {
@@ -16,9 +17,11 @@ const Task = ({task}: TaskProps) => {
             <>
                 <input
                     value={task.text}
+                    onChange={ (e: ChangeEvent<HTMLInputElement>) => { tasksDispatch({type:"changed", argumento: {...task, text: e.target.value}}) }}
                 />
-                <button>Save</button>
-
+                <button
+                    onClick={ () => {setIsEditing(false)}}
+                >Save</button>
             </>
         );
 
@@ -26,7 +29,9 @@ const Task = ({task}: TaskProps) => {
         taskContent = (
             <>
                 {task.text}
-                <button>Edit</button>
+                <button
+                    onClick={ () => {setIsEditing(true)}}
+                >Edit</button>
             </>
         )
     }
@@ -36,9 +41,12 @@ const Task = ({task}: TaskProps) => {
             <input
                 type="checkbox"
                 checked={task.done}
-                onChange={ (e: React.ChangeEvent<HTMLInputElement>) => {tasksDispatch({type: "changed", argumento: {...task, done: e.target.checked}})}}
+                onChange={ (e: ChangeEvent<HTMLInputElement>) => {tasksDispatch({type: "changed", argumento: {...task, done: e.target.checked}})}}
             />
             {taskContent}
+            <button
+                onClick={ () => {tasksDispatch({type:"deleted", argumento: task})} }
+            >Delete</button>
         </label>
     )
 }

@@ -1,5 +1,6 @@
 import { ReactNode, createContext, useReducer, Dispatch, Context, useContext } from "react"
 import { tasksReducer, tasksReducerAction, tasksReducerInit } from "../reducers/TasksReducer"
+import { ClsTask } from "../Class/Class"
 
 
 type TasksProviderProps = {

@@ -10,3 +10,7 @@ class ClsTask {
         this.done = done
     }
 }
+
+export {
+    ClsTask
+}
